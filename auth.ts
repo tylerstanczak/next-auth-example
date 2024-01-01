@@ -139,6 +139,17 @@ export const config = {
       if (pathname === "/middleware-example") return !!auth
       return true
     },
+    jwt(token, account) {
+      console.log('jwt callbackt token param exists:', !!token) // true
+      console.log('jwt callback account param exists:', !!account) // false (bug)
+      console.log('jwt callback token.account exists:', !!token.account) // true (workaround)
+      // Documentation suggests this exact example, only by accessing the account param directly instead
+      // However, due to the bug, account values that need to be stored in the token must be accessed like so
+      if (token.account) {
+        token.someVar = token.account.someVarToPersist
+      }
+      return token
+    }
   },
 } satisfies NextAuthConfig
 
